@@ -11,8 +11,6 @@ interface ProductProps {
 }
 
 async function getProduct(slug: string): Promise<Product> {
-  await new Promise((resolve) => setTimeout(resolve, 2000))
-
   const response = await api(`/products/${slug}`, {
     next: {
       revalidate: 60 * 60, // 1 hour
@@ -31,6 +29,15 @@ export async function generateMetadata({
   return {
     title: product.title,
   }
+}
+
+export async function generateStaticParams() {
+  const response = await api('/products/featured')
+  const products: Product[] = await response.json()
+
+  return products.map((product) => {
+    return { slug: product.slug }
+  })
 }
 
 export default async function ProductPage({ params }: ProductProps) {
