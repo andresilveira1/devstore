@@ -1,13 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { Metadata } from 'next'
 
 import { api } from '@/data/api'
 import { Product } from '@/data/types/product'
 
 async function getFeaturedProducts(): Promise<Product[]> {
-  await new Promise((resolve) => setTimeout(resolve, 2000))
-
-  const response = await api('/products/featured', {
+  const response = await api('/product/featured', {
     next: {
       revalidate: 60 * 60, // 1 hour
     },
@@ -17,13 +16,17 @@ async function getFeaturedProducts(): Promise<Product[]> {
   return products
 }
 
+export const metadata: Metadata = {
+  title: 'Home',
+}
+
 export default async function Home() {
   const [highlightedProduct, ...otherProducts] = await getFeaturedProducts()
 
   return (
     <div className="grid max-h-[860px] grid-cols-9 grid-rows-6 gap-6">
       <Link
-        href={`/products/${highlightedProduct.slug}`}
+        href={`/product/${highlightedProduct.slug}`}
         className="group relative col-span-6 row-span-6 bg-zinc-900 rounded-lg overflow-hidden flex justify-center items-end"
       >
         <Image
@@ -53,7 +56,7 @@ export default async function Home() {
           return (
             <Link
               key={product.id}
-              href={`/products/${product.slug}`}
+              href={`/product/${product.slug}`}
               className="group relative col-span-3 row-span-3 bg-zinc-900 rounded-lg overflow-hidden flex justify-center items-end"
             >
               <Image
