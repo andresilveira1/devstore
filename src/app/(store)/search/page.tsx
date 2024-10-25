@@ -12,7 +12,7 @@ interface SearchProps {
 }
 
 async function searchProducts(query: string): Promise<Product[]> {
-  const response = await api(`/product/search?q=${query}`, {
+  const response = await api(`/products/search?q=${query}`, {
     next: {
       revalidate: 60 * 60, // 1 hour
     },
